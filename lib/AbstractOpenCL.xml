@@ -1,0 +1,1064 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AbstractOpenCL</name>
+    </assembly>
+    <members>
+        <member name="T:OpenCL.Abstract.Abstract">
+            <summary>
+            Regulates the rules of working of the whole AbstractOpenCL environment.
+            </summary>
+        </member>
+        <member name="F:OpenCL.Abstract.Abstract.diagnostics">
+            <summary>
+            Stores the initial value of Diagnostics property.
+            </summary>
+        </member>
+        <member name="F:OpenCL.Abstract.Abstract.traceErrors">
+            <summary>
+            Stores the initial value of TraceErrors property.
+            </summary>
+        </member>
+        <member name="F:OpenCL.Abstract.Abstract.throwOnErrors">
+            <summary>
+            Stores the initial value of ThrowOnErrors property.
+            </summary>
+        </member>
+        <member name="M:OpenCL.Abstract.Abstract.Trace(System.String)">
+            <summary>
+            Writes the input to System.Diagnostics.Trace
+            </summary>
+            <param name="s"></param>
+        </member>
+        <member name="M:OpenCL.Abstract.Abstract.Trace(System.String,System.Object[])">
+            <summary>
+            Writes the input to System.Diagnostics.Trace
+            </summary>
+            <param name="s"></param>
+            <param name="args"></param>
+        </member>
+        <member name="M:OpenCL.Abstract.Abstract.TraceLine(System.String)">
+            <summary>
+            Writes the input to System.Diagnostics.Trace
+            </summary>
+            <param name="s"></param>
+        </member>
+        <member name="M:OpenCL.Abstract.Abstract.TraceLine(System.String,System.Object[])">
+            <summary>
+            Writes the input to System.Diagnostics.Trace
+            </summary>
+            <param name="s"></param>
+            <param name="args"></param>
+        </member>
+        <member name="M:OpenCL.Abstract.Abstract.Diagnose(OpenCL.Abstract.ErrorCode)">
+            <summary>
+            Returns a string (if available) that explains the given error code.
+            </summary>
+            <param name="errorCode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Abstract.IsError(OpenCL.Abstract.ErrorCode)">
+            <summary>
+            Returns true if the given error code indicates an error.
+            </summary>
+            <param name="errorCode">code of the error</param>
+            <returns>true if the argument indicates an error</returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Abstract.IsSuccess(OpenCL.Abstract.ErrorCode)">
+            <summary>
+            Returns true if the given error code indicates a success.
+            </summary>
+            <param name="errorCode">code of the error</param>
+            <returns>true if the argument indicates a success</returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Abstract.LogIfError(OpenCL.Abstract.ErrorCode)">
+            <summary>
+            Writes an entry to log if an error was detected. Returns true if it was detected.
+            </summary>
+            <param name="errorCode">the code of error</param>
+            <returns>true if error code was not equal to ErrorCode.Success</returns>
+        </member>
+        <member name="P:OpenCL.Abstract.Abstract.Diagnostics">
+            <summary>
+            If true, all AbstracOpenCL methods will print self-diagnostic information 
+            using System.Diagnostics.Trace - this makes them much slower, but it is useful 
+            to determine what is in fact happening.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Abstract.TraceErrors">
+            <summary>
+            If true, all AbstracOpenCL methods will print information using System.Diagnostics.Trace 
+            in case there is any error. Error situation is defined as such when the ErrorCode 
+            returned by the underlying call to OpenCL API is different than CL_SUCCESS.
+            This is very useful track down source of error.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Abstract.ThrowOnErrors">
+            <summary>
+            If true, all AbstracOpenCL methods will throw exception in case there is any error.
+            If false, none will throw.
+            If null, the behaviour implemented by default will occur, i.e. some will throw and some will not.
+            </summary>
+        </member>
+        <member name="T:OpenCL.Abstract.Buffer`1">
+            <summary>
+            Buffer is a general-purpose MemoryObject.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:OpenCL.Abstract.MemoryObject`1">
+            <summary>
+            Abstract parent of Buffer and Image classes
+            </summary>
+            <typeparam name="T">type of the entries contained in the memory</typeparam>
+        </member>
+        <member name="M:OpenCL.Abstract.MemoryObject`1.#ctor(`0[])">
+            <summary>
+            Creates a new MemoryObject without setting a default command queue.
+            </summary>
+            <param name="collection">backing collection of this MemoryObject</param>
+        </member>
+        <member name="M:OpenCL.Abstract.MemoryObject`1.#ctor(OpenCL.Abstract.CommandQueue,`0[])">
+            <summary>
+            Creates a new MemoryObject.
+            </summary>
+            <param name="queue">default command queue used in future operations on this object</param>
+            <param name="collection">backing collection of this MemoryObject</param>
+        </member>
+        <member name="M:OpenCL.Abstract.MemoryObject`1.Dispose">
+            <summary>
+            Sets field values to null, meant to be overriden by non-abstract subclasses.
+            </summary>
+        </member>
+        <member name="M:OpenCL.Abstract.MemoryObject`1.AddWritingResult(OpenCL.Abstract.ActionResult)">
+            <summary>
+            This method should be executed only in case of diagnostic run,
+            i.e. when Abstract.Diagnostics is true.
+            </summary>
+            <param name="result">result that is added to the list of writing results</param>
+        </member>
+        <member name="M:OpenCL.Abstract.MemoryObject`1.AddReadingResult(OpenCL.Abstract.ActionResult)">
+            <summary>
+            This method should be executed only in case of diagnostic run,
+            i.e. when Abstract.Diagnostics is true.
+            </summary>
+            <param name="result">result that is added to the list of reading results</param>
+        </member>
+        <member name="M:OpenCL.Abstract.MemoryObject`1.Write">
+            <summary>
+            Copies the whole default backing collection into the buffer using default command queue.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OpenCL.Abstract.MemoryObject`1.Write(OpenCL.Abstract.CommandQueue,System.Boolean,`0[],System.UInt32,System.UInt32)">
+            <summary>
+            Writes given source collection to the given subset of the buffer.
+            </summary>
+            <param name="queue">command queue on which the writing will be performed</param>
+            <param name="blockingWrite">if true, the method blocks until writing has ended</param>
+            <param name="sourceCollection">source array</param>
+            <param name="startingIndex">starting index of buffer to be overwritten</param>
+            <param name="length">number of buffer entries to be overwritten</param>
+            <returns>true if writing procedure was successfully invoked</returns>
+        </member>
+        <member name="M:OpenCL.Abstract.MemoryObject`1.Read">
+            <summary>
+            Reads the whole buffer using default command queue and stores it in the default backing collection.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OpenCL.Abstract.MemoryObject`1.Read(System.UInt32,System.UInt32)">
+            <summary>
+            Reads a selected part of the buffer using default command queue and stores it at the beginning 
+            of the default backing collection.
+            </summary>
+            <param name="startingIndex"></param>
+            <param name="length"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OpenCL.Abstract.MemoryObject`1.Copy(OpenCL.Abstract.MemoryObject{`0})">
+            <summary>
+            Enqueues copying of all contents of this MemoryObject to another MemoryObject.
+            </summary>
+            <param name="destination">target memory</param>
+            <returns>true if the copy operation was successfully enqueued</returns>
+        </member>
+        <member name="P:OpenCL.Abstract.MemoryObject`1.DefaultQueue">
+            <summary>
+            Command queue, on which the memory object enqueues its actions by default.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.MemoryObject`1.BackingCollection">
+            <summary>
+            Backing collection of this MemoryObject.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.MemoryObject`1.Length">
+            <summary>
+            Length of the backing collection, and also the memory object itself.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.MemoryObject`1.LengthSigned">
+            <summary>
+            Gets length of this memory object as a signed integer.
+            </summary>
+        </member>
+        <member name="M:OpenCL.Abstract.Buffer`1.#ctor(OpenCL.Abstract.Context,System.UInt32)">
+            <summary>
+            Creates a new buffer, and allocates backing array for it.
+            </summary>
+            <param name="context">Context, in which this buffer resides</param>
+            <param name="backingArrayLength">length of the backing array</param>
+        </member>
+        <member name="M:OpenCL.Abstract.Buffer`1.#ctor(OpenCL.Abstract.Context,`0[])">
+            <summary>
+            Creates a new buffer.
+            </summary>
+            <param name="context">Context, in which this buffer resides</param>
+            <param name="backingArray"></param>
+        </member>
+        <member name="M:OpenCL.Abstract.Buffer`1.#ctor(OpenCL.Abstract.Context,OpenCL.Abstract.CommandQueue,System.UInt32)">
+            <summary>
+            Creates a new buffer, and allocates backing array for it.
+            </summary>
+            <param name="context">Context, in which this buffer resides</param>
+            <param name="queue">default command queue for operations on this buffer</param>
+            <param name="backingArrayLength">length of the backing array</param>
+        </member>
+        <member name="M:OpenCL.Abstract.Buffer`1.#ctor(OpenCL.Abstract.Context,OpenCL.Abstract.CommandQueue,`0[])">
+            <summary>
+            Creates a new buffer.
+            </summary>
+            <param name="context">Context, in which this buffer resides</param>
+            <param name="queue">default command queue for operations on this buffer</param>
+            <param name="backingArray"></param>
+        </member>
+        <member name="M:OpenCL.Abstract.Buffer`1.Dispose">
+            <summary>
+            Disposes the underlying OpenCL memory handle.
+            </summary>
+        </member>
+        <member name="M:OpenCL.Abstract.Buffer`1.ToString">
+            <summary>
+            Returns a short string that represents this object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Buffer`1.ToDetailedString">
+            <summary>
+            Returns a long and very detailed string that represents this object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Buffer`1.ToString(System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Returns a customizable string that represents this object.
+            </summary>
+            <param name="includeType"></param>
+            <param name="includeSize"></param>
+            <param name="includeFlags"></param>
+            <param name="includeReferenceCount"></param>
+            <param name="includeMapCount"></param>
+            <param name="includeHostPtr"></param>
+            <returns></returns>
+        </member>
+        <member name="P:OpenCL.Abstract.Buffer`1.Array">
+            <summary>
+            Backing collection of this buffer. Alias for BackingCollection field.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Buffer`1.Value">
+            <summary>
+            Value of the first cell of the backing array.
+            </summary>
+        </member>
+        <member name="M:OpenCL.Abstract.CommandQueue.#ctor(OpenCL.Abstract.Device,OpenCL.Abstract.Context)">
+            <summary>
+            Creates a new command queue on a specific context on a specific device.
+            </summary>
+            <param name="device">a device</param>
+            <param name="context">a context on that deviec</param>
+        </member>
+        <member name="M:OpenCL.Abstract.CommandQueue.Dispose">
+            <summary>
+            Releases the unmanaged memory paired with this object.
+            </summary>
+        </member>
+        <member name="M:OpenCL.Abstract.CommandQueue.ToString">
+            <summary>
+            Returns a short string that represents this object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OpenCL.Abstract.CommandQueue.ToDetailedString">
+            <summary>
+            Returns a long and very detailed string that represents this object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OpenCL.Abstract.CommandQueue.ToString(System.Boolean)">
+            <summary>
+            Returns a customizable string that represents this object.
+            </summary>
+            <param name="includeReferenceCount"></param>
+            <returns></returns>
+        </member>
+        <member name="P:OpenCL.Abstract.CommandQueue.Handle">
+            <summary>
+            Pointer to unmanaged memory.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.CommandQueue.Device">
+            <summary>
+            Device, on which this command queue resides.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.CommandQueue.Context">
+            <summary>
+            Context, on which this command queue resides.
+            </summary>
+        </member>
+        <member name="T:OpenCL.Abstract.Context">
+            <summary>
+            Device's context.
+            </summary>
+        </member>
+        <member name="M:OpenCL.Abstract.Context.#ctor">
+            <summary>
+            Creates a context for a default device on a default platform.
+            
+            This method should not fail unless there are no OpenCL devices present.
+            </summary>
+        </member>
+        <member name="M:OpenCL.Abstract.Context.#ctor(OpenCL.Abstract.Device)">
+            <summary>
+            Creates a context for a specific Device.
+            </summary>
+            <param name="device">a device</param>
+        </member>
+        <member name="M:OpenCL.Abstract.Context.#ctor(OpenCL.Abstract.Device[])">
+            <summary>
+            Creates a context for a Device array.
+            </summary>
+            <param name="devices">set of devices</param>
+        </member>
+        <member name="M:OpenCL.Abstract.Context.Dispose">
+            <summary>
+            Releases the unmanaged memory paired with this object.
+            </summary>
+        </member>
+        <member name="M:OpenCL.Abstract.Context.ToString">
+            <summary>
+            Returns a short string that represents this object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Context.ToDetailedString">
+            <summary>
+            Returns a long and very detailed string that represents this object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Context.ToString(System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Returns a customizable string that represents this object.
+            </summary>
+            <param name="includeDevices"></param>
+            <param name="includeProperties"></param>
+            <param name="includeReferenceCount"></param>
+            <returns></returns>
+        </member>
+        <member name="P:OpenCL.Abstract.Context.Devices">
+            <summary>
+            Array of devices, for which this context is valid.
+            </summary>
+        </member>
+        <member name="T:OpenCL.Abstract.Device">
+            <summary>
+            Device is a virtual representation of a physical computing device that supports OpenCL.
+            </summary>
+        </member>
+        <member name="M:OpenCL.Abstract.Device.#ctor">
+            <summary>
+            Constructs a Device of any type, on a first found Platform.
+            </summary>
+        </member>
+        <member name="M:OpenCL.Abstract.Device.#ctor(OpenCL.Abstract.DeviceType)">
+            <summary>
+            Finds (among all available OpenCL platforms) a device of a given type and initializes it.
+            </summary>
+            <param name="deviceType">type of the device</param>
+        </member>
+        <member name="M:OpenCL.Abstract.Device.#ctor(OpenCL.Abstract.Platform,OpenCL.Abstract.DeviceType)">
+            <summary>
+            Tries to find a device of specific type on a specific platform.
+            </summary>
+            <param name="platform"></param>
+            <param name="deviceType"></param>
+        </member>
+        <member name="M:OpenCL.Abstract.Device.ToString">
+            <summary>
+            Returns a short string that represents this object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Device.ToDetailedString">
+            <summary>
+            Returns a long and very detailed string that represents this object.
+            </summary>
+            <returns>list of details of this Device</returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Device.ToString(System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Returns a customizable string that represents this object.
+            </summary>
+            <param name="includeType"></param>
+            <param name="IncludeName"></param>
+            <param name="includeVendor"></param>
+            <param name="includeVersion"></param>
+            <param name="includeDriverVersion"></param>
+            <param name="includePower"></param>
+            <param name="includeMemory"></param>
+            <returns></returns>
+        </member>
+        <member name="P:OpenCL.Abstract.Device.Platform">
+            <summary>
+            Platform, on which this Device resides.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Device.Type">
+            <summary>
+            Type of this Device.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Device.Name">
+            <summary>
+            Name of this Device.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Device.Vendor">
+            <summary>
+            Vendor of this Device.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Device.Version">
+            <summary>
+            Version of this Device.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Device.DriverVersion">
+            <summary>
+            Driver version of this Device.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Device.MaxWorkItemDimensions">
+            <summary>
+            Maximum work-item dimensions count of this Device.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Device.MaxWorkItemSizes">
+            <summary>
+            Maximum work-item sizes of this Device.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Device.MaxWorkGroupSize">
+            <summary>
+            Maximum work-group size of this Device.
+            </summary>
+        </member>
+        <member name="T:OpenCL.Abstract.Devices">
+            <summary>
+            Abstraction layer enabling easy Device initialization.
+            </summary>
+        </member>
+        <member name="M:OpenCL.Abstract.Devices.InitializeAll">
+            <summary>
+            Initializes all devices from all platforms.
+            </summary>
+            <returns>array of all OpenCL devices present in the environment</returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Devices.InitializeAll(OpenCL.Abstract.Platform[])">
+            <summary>
+            Initializes all devices from all given platforms.
+            </summary>
+            <param name="platforms"></param>
+            <returns>array of all OpenCL devices present on given platforms</returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Devices.InitializeAtMost(System.UInt32)">
+            <summary>
+            Initializes at most the given number of devices of any type from all available platforms.
+            </summary>
+            <param name="maximumNumber">maximum length of the returned array</param>
+            <returns>array of devices that has length and contents meeting the criteria</returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Devices.InitializeAtMost(OpenCL.Abstract.DeviceType,System.UInt32)">
+            <summary>
+            Initializes at most the given number of devices of given type from all available platforms.
+            </summary>
+            <param name="deviceType"></param>
+            <param name="maximumNumber">maximum length of the returned array</param>
+            <returns>array of devices that has length and contents meeting the criteria</returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Devices.InitializeAll(OpenCL.Abstract.Platform)">
+            <summary>
+            Initializes all devices from a given platform.
+            </summary>
+            <param name="platform"></param>
+            <returns>array of all OpenCL devices present on given platform</returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Devices.InitializeAll(OpenCL.Abstract.Platform,OpenCL.Abstract.DeviceType)">
+            <summary>
+            Initializes all devices of given type from a given platform.
+            </summary>
+            <param name="platform"></param>
+            <param name="deviceType"></param>
+            <returns>array of all OpenCL devices of given type, present on given platform</returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Devices.InitializeAtMost(OpenCL.Abstract.Platform,System.UInt32)">
+            <summary>
+            Initializes at most the given number of devices of any type from a given platform.
+            </summary>
+            <param name="platform"></param>
+            <param name="maximumNumber">maximum length of the returned array</param>
+            <returns>array of devices that has length and contents meeting the criteria</returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Devices.InitializeAtMost(OpenCL.Abstract.Platform,OpenCL.Abstract.DeviceType,System.UInt32)">
+            <summary>
+            Initializes at most the given number of devices of given type from a given platform.
+            </summary>
+            <param name="platform"></param>
+            <param name="deviceType"></param>
+            <param name="maximumNumber">maximum length of the returned array</param>
+            <returns>array of devices that has length and contents meeting the criteria</returns>
+        </member>
+        <member name="T:OpenCL.Abstract.ErrorCode">
+            <summary>
+            Error codes for all possible encountered errors.
+            </summary>
+        </member>
+        <member name="F:OpenCL.Abstract.ErrorCode.Success">
+            <summary>
+            There was no error.
+            </summary>
+        </member>
+        <member name="T:OpenCL.Abstract.PlatformInfo">
+            <summary>
+            Kinds of information about Platform
+            </summary>
+        </member>
+        <member name="T:OpenCL.Abstract.DeviceType">
+            <summary>
+            Possible types that a Device can have.
+            </summary>
+        </member>
+        <member name="T:OpenCL.Abstract.Kernel">
+            <summary>
+            OpenCL kernel.
+            </summary>
+        </member>
+        <member name="M:OpenCL.Abstract.Kernel.#ctor(OpenCL.Abstract.Program,System.String)">
+            <summary>
+            Constructs a new OpenCL kernel without setting a default command queue.
+            </summary>
+            <param name="program"></param>
+            <param name="kernelName"></param>
+        </member>
+        <member name="M:OpenCL.Abstract.Kernel.#ctor(OpenCL.Abstract.CommandQueue,OpenCL.Abstract.Program,System.String)">
+            <summary>
+            Constructs a new OpenCL kernel.
+            </summary>
+            <param name="defaultQueue">default command queue</param>
+            <param name="program"></param>
+            <param name="kernelName"></param>
+        </member>
+        <member name="M:OpenCL.Abstract.Kernel.Dispose">
+            <summary>
+            Releases the unmanaged memory paired with this object.
+            </summary>
+        </member>
+        <member name="M:OpenCL.Abstract.Kernel.SetArgument(System.UInt32,System.Boolean)">
+            <summary>
+            Sets the argument of this Kernel at given 0-based index to a given value.
+            </summary>
+            <param name="index"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:OpenCL.Abstract.Kernel.SetArgument(System.UInt32,System.Int32)">
+            <summary>
+            Sets the argument of this Kernel at given 0-based index to a given value.
+            </summary>
+            <param name="index"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:OpenCL.Abstract.Kernel.SetArgument(System.UInt32,System.Single)">
+            <summary>
+            Sets the argument of this Kernel at given 0-based index to a given value.
+            </summary>
+            <param name="index"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:OpenCL.Abstract.Kernel.SetArgument``1(System.UInt32,OpenCL.Abstract.Buffer{``0})">
+            <summary>
+            Sets the argument of this Kernel at given 0-based index to a given buffer.
+            </summary>
+            <param name="index"></param>
+            <param name="buffer"></param>
+        </member>
+        <member name="M:OpenCL.Abstract.Kernel.SetArguments``1(OpenCL.Abstract.Buffer{``0}[])">
+            <summary>
+            Sets arguments of the Kernel to given ones. Setting process starts from argument with index 0.
+            If a buffer in the list is null, its position is omitted from the process.
+            
+            SetArguments(b1, b2, b3);
+            
+            is identical to:
+            
+            SetArgument(0, b1);
+            SetArgument(1, b2);
+            SetArgument(2, b3);
+            
+            and
+            
+            SetArguments(b1, null, b3);
+            
+            is identical to:
+            
+            SetArgument(0, b1);
+            SetArgument(2, b3);
+            </summary>
+            <typeparam name="T">all buffers must have identical type - if they do not,
+            use individual SetArgument(int, buffer) instead</typeparam>
+            <param name="buffers">vararg list of buffers</param>
+        </member>
+        <member name="M:OpenCL.Abstract.Kernel.Launch1D(System.UInt32,System.UInt32)">
+            <summary>
+            Launches this Kernel in a 1-dimensional grid of threads using the default command queue.
+            </summary>
+            <param name="globalWorkSize">total work size, must be divisible by given work-group size</param>
+            <param name="localWorkSize">work-group size</param>
+        </member>
+        <member name="M:OpenCL.Abstract.Kernel.Launch1D(OpenCL.Abstract.CommandQueue,System.UInt32,System.UInt32)">
+            <summary>
+            Launches this Kernel in a 1-dimensional grid of threads.
+            </summary>
+            <param name="queue"></param>
+            <param name="globalWorkSize">total work size, must be divisible by given work-group size</param>
+            <param name="localWorkSize">work-group size</param>
+        </member>
+        <member name="M:OpenCL.Abstract.Kernel.Launch2D(System.UInt32,System.UInt32,System.UInt32,System.UInt32)">
+            <summary>
+            Launches this Kernel in a 2-dimensional grid of threads using the default command queue.
+            </summary>
+            <param name="globalWorkSizeX"></param>
+            <param name="localWorkSizeX"></param>
+            <param name="globalWorkSizeY"></param>
+            <param name="localWorkSizeY"></param>
+        </member>
+        <member name="M:OpenCL.Abstract.Kernel.Launch2D(OpenCL.Abstract.CommandQueue,System.UInt32,System.UInt32,System.UInt32,System.UInt32)">
+            <summary>
+            Launches this Kernel in a 2-dimensional grid of threads.
+            </summary>
+            <param name="queue"></param>
+            <param name="globalWorkSizeX"></param>
+            <param name="localWorkSizeX"></param>
+            <param name="globalWorkSizeY"></param>
+            <param name="localWorkSizeY"></param>
+        </member>
+        <member name="M:OpenCL.Abstract.Kernel.ToString">
+            <summary>
+            Returns a short string that represents this object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Kernel.ToDetailedString">
+            <summary>
+            Returns a long and very detailed string that represents this object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Kernel.ToString(System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Returns a customizable string that represents this object.
+            </summary>
+            <param name="includeFunctionName"></param>
+            <param name="includeNumberOfArgs"></param>
+            <param name="includeReferenceCount"></param>
+            <returns></returns>
+        </member>
+        <member name="P:OpenCL.Abstract.Kernel.DefaultQueue">
+            <summary>
+            Default queue on which this kernel is launched unless other queue is specified 
+            in Launch1D(), Launch2D(), Launch3D() or LaunchND() method call.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Kernel.Program">
+            <summary>
+            Program for this Kernel.
+            </summary>
+        </member>
+        <member name="T:OpenCL.Abstract.Kernels">
+            <summary>
+            Collection of example kernel, which are built on-demand, i.e. when a constructor 
+            of the first instance of a given Kernel is called.
+            </summary>
+        </member>
+        <member name="M:OpenCL.Abstract.Kernels.Dispose">
+            <summary>
+            Releases the unmanaged memory paired with this class.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Kernels.Device">
+            <summary>
+            Specifies the Device on which the example kernels are built.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Kernels.Context">
+            <summary>
+            Specifies the Context on which the example kernels are created.
+            </summary>
+        </member>
+        <member name="T:OpenCL.Abstract.MemoryObject">
+            <summary>
+            Utility class for memory unit conversion in ToString() methods of objects 
+            that have properties like available memory, max size in bytes, etc.
+            </summary>
+        </member>
+        <member name="T:OpenCL.Abstract.Platform">
+            <summary>
+            OpenCL platform is the most fundamental entity.
+            </summary>
+        </member>
+        <member name="M:OpenCL.Abstract.Platform.#ctor">
+            <summary>
+            Initializes the first encountered platform.
+            </summary>
+        </member>
+        <member name="M:OpenCL.Abstract.Platform.ToString">
+            <summary>
+            Returns a short string that represents this object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Platform.ToDetailedString">
+            <summary>
+            Returns a long and very detailed string that represents this object.
+            </summary>
+            <returns>list of details of this Platform</returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Platform.ToDetailedStringWithDevices">
+            <summary>
+            Returns a long and very detailed string that represents this Platform
+            and all devices available on it.
+            </summary>
+            <returns>list of details and devices of this Platform</returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Platform.ToString(System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Returns a customizable string that represents this object.
+            </summary>
+            <param name="includeProfile"></param>
+            <param name="includeName"></param>
+            <param name="includeVendor"></param>
+            <param name="includeVersion"></param>
+            <param name="includeExtensions"></param>
+            <param name="includeDevices"></param>
+            <returns></returns>
+        </member>
+        <member name="P:OpenCL.Abstract.Platform.Profile">
+            <summary>
+            Profile of this Platform.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Platform.Name">
+            <summary>
+            Name of this Platform.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Platform.Vendor">
+            <summary>
+            Vendor of this Platform.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Platform.Version">
+            <summary>
+            Version of this Platform.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Platform.Extensions">
+            <summary>
+            Extensions of this Platform.
+            </summary>
+        </member>
+        <member name="T:OpenCL.Abstract.Platforms">
+            <summary>
+            Abstraction layer enabling easy Platform initialization.
+            </summary>
+        </member>
+        <member name="M:OpenCL.Abstract.Platforms.Count">
+            <summary>
+            Determines and returns number of available OpenCL platforms.
+            </summary>
+            <returns>number of available OpenCL platforms, 0 in case of any errors</returns>
+        </member>
+        <member name="T:OpenCL.Abstract.Program">
+            <summary>
+            Contains OpenCL program, also executable if it is built.
+            </summary>
+        </member>
+        <member name="M:OpenCL.Abstract.Program.#ctor(OpenCL.Abstract.Context,OpenCL.Abstract.SourceCode)">
+            <summary>
+            Creates a new Program, and does not build it.
+            </summary>
+            <param name="context">context for which the program is created</param>
+            <param name="sourceCode">source code of the program</param>
+        </member>
+        <member name="M:OpenCL.Abstract.Program.#ctor(OpenCL.Abstract.Context,OpenCL.Abstract.SourceCode,OpenCL.Abstract.Device)">
+            <summary>
+            Creates a new Program, and builds it on a given device with no extra build options.
+            </summary>
+            <param name="context">context for which the program is created</param>
+            <param name="sourceCode">source code of the program</param>
+            <param name="device">device on which the program will be built</param>
+        </member>
+        <member name="M:OpenCL.Abstract.Program.#ctor(OpenCL.Abstract.Context,OpenCL.Abstract.SourceCode,OpenCL.Abstract.Device,System.String)">
+            <summary>
+            Creates a new Program, and builds it on a given device with given build options.
+            </summary>
+            <param name="context">context for which the program is created</param>
+            <param name="sourceCode">source code of the program</param>
+            <param name="device">device on which the program will be built</param>
+            <param name="buildOptions">build options for the OpenCL compiler</param>
+        </member>
+        <member name="M:OpenCL.Abstract.Program.Dispose">
+            <summary>
+            Releases the unmanaged memory paired with this object.
+            </summary>
+        </member>
+        <member name="M:OpenCL.Abstract.Program.Build(OpenCL.Abstract.Device)">
+            <summary>
+            Builds this Program on a given Device with no build options.
+            </summary>
+            <param name="device">the device, on which this Program will be built</param>
+        </member>
+        <member name="M:OpenCL.Abstract.Program.Build(OpenCL.Abstract.Device,System.String)">
+            <summary>
+            Builds this Program on a given Device.
+            </summary>
+            <param name="device">the device, on which this Program will be built</param>
+            <param name="buildOptions">optional build options</param>
+        </member>
+        <member name="M:OpenCL.Abstract.Program.BuildInformation">
+            <summary>
+            Returns build information, for a Device on which this program was built.
+            </summary>
+            <returns>build information</returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Program.BuildInformation(OpenCL.Abstract.Device)">
+            <summary>
+            Returns build info, for the given Device.
+            </summary>
+            <param name="forDevice">a Device for which build information is gathered</param>
+            <returns>build information</returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Program.ToString">
+            <summary>
+            Returns a short string that represents this object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Program.ToDetailedString">
+            <summary>
+            Returns a long and very detailed string that represents this object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Program.ToDetailedString(OpenCL.Abstract.Device)">
+            <summary>
+            Returns a long and very detailed string that represents this object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Program.ToString(System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Returns a customizable string that represents this object.
+            </summary>
+            <param name="includeSourceCodeMetrics"></param>
+            <param name="includeSourceCode"></param>
+            <param name="includeBuildInformation"></param>
+            <param name="includeDetailedBuildInformation"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OpenCL.Abstract.Program.ToString(System.Boolean,System.Boolean,System.Boolean,OpenCL.Abstract.Device,System.Boolean)">
+            <summary>
+            Returns a customizable string that represents this object.
+            </summary>
+            <param name="includeSourceCodeMetrics"></param>
+            <param name="includeSourceCode"></param>
+            <param name="includeBuildInformation"></param>
+            <param name="deviceWithBuildInformation"></param>
+            <param name="includeDetailedBuildInformation"></param>
+            <returns></returns>
+        </member>
+        <member name="P:OpenCL.Abstract.Program.Context">
+            <summary>
+            Context, in which this Program was created.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Program.Built">
+            <summary>
+            True indicates that this program is already built.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Program.DeviceBuiltOn">
+            <summary>
+            If not null, contains device that this program was built on.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Program.SourceCode">
+            <summary>
+            SourceCode from which the Program was created.
+            </summary>
+        </member>
+        <member name="T:OpenCL.Abstract.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Properties.Resources.cl_constantAssignment">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Properties.Resources.cl_generalPurpose">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Properties.Resources.cl_pairwiseArithmetic">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Properties.Resources.cl_pairwiseLogic">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Properties.Resources.cl_singleVectorArithmetic">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.Properties.Resources.cl_singleVectorLogic">
+            <summary>
+              Looks up a localized resource of type System.Byte[].
+            </summary>
+        </member>
+        <member name="T:OpenCL.Abstract.SourceCode">
+            <summary>
+            This is a immutable object.
+            </summary>
+        </member>
+        <member name="F:OpenCL.Abstract.SourceCode.path">
+            <summary>
+            Either path to a file or name of the resource, depending on context.
+            </summary>
+        </member>
+        <member name="F:OpenCL.Abstract.SourceCode.lines">
+            <summary>
+            Stores lines of source code.
+            </summary>
+        </member>
+        <member name="F:OpenCL.Abstract.SourceCode.lenghts">
+            <summary>
+            Stores lenghts of lines of source code.
+            </summary>
+        </member>
+        <member name="M:OpenCL.Abstract.SourceCode.#ctor(System.String)">
+            <summary>
+            Creates e new source code from a file at a specified path.
+            </summary>
+            <param name="filePath">path to the file</param>
+        </member>
+        <member name="M:OpenCL.Abstract.SourceCode.#ctor(System.Resources.ResourceManager,System.String)">
+            <summary>
+            Retrieves OpenCL source code contained at a specific path in the resource file of a given assembly.
+            </summary>
+            <param name="manager">resource manager of some resources file</param>
+            <param name="resourcePath">path to the resource in the resource file</param>
+        </member>
+        <member name="M:OpenCL.Abstract.SourceCode.Append(OpenCL.Abstract.SourceCode)">
+            <summary>
+            
+            </summary>
+            <param name="otherSource"></param>
+            <returns>returns new instance of source code</returns>
+        </member>
+        <member name="M:OpenCL.Abstract.SourceCode.Insert(System.UInt32,OpenCL.Abstract.SourceCode)">
+            <summary>
+            
+            </summary>
+            <param name="afterLineNumber"></param>
+            <param name="otherSource"></param>
+            <returns>returns new instance of source code</returns>
+        </member>
+        <member name="M:OpenCL.Abstract.SourceCode.ToString">
+            <summary>
+            Returns a short string that represents this object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OpenCL.Abstract.SourceCode.ToDetailedString">
+            <summary>
+            Returns a long and very detailed string that represents this object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OpenCL.Abstract.SourceCode.ToString(System.Boolean,System.Boolean)">
+            <summary>
+            Returns a customizable string that represents this object.
+            </summary>
+            <param name="includeSourceCodeMetrics"></param>
+            <param name="includeSourceCode"></param>
+            <returns></returns>
+        </member>
+        <member name="P:OpenCL.Abstract.SourceCode.Path">
+            <summary>
+            Used to access the path of the resource
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.SourceCode.GeneratedFrom">
+            <summary>
+            If this source code was not created directly from source file, 
+            but rather by combining other sources, it enumerates 
+            parent SourceCode objects.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.SourceCode.Lines">
+            <summary>
+            Used to access lines of source code.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.SourceCode.LinesCount">
+            <summary>
+            Used to easily access total count of lines of source code.
+            </summary>
+        </member>
+        <member name="P:OpenCL.Abstract.SourceCode.Lenghts">
+            <summary>
+            Used to access lenghts of lines of source code.
+            </summary>
+        </member>
+    </members>
+</doc>
