@@ -6,7 +6,7 @@ using System.Linq;
 namespace AprioriAllLib
 {
 	/*!
-	 * \addtogroup input
+	 * \ addtogroup input
 	 * @{
 	 */
 
